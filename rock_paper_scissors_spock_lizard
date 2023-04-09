@@ -1,0 +1,30 @@
+import random
+
+items = {'rock': ['lizard', 'scissors'],
+         'paper': ['rock', 'spock'],
+         'scissors': ['paper', 'lizard'],
+         'spock': ['rock', 'scissors'],
+         'lizard': ['paper', 'spock']}
+
+
+def winner(user, computer):
+    if computer in items[user]:
+        return 'you won!'
+    elif user == computer:
+        return 'it\'s a draw!'
+    else:
+        return 'you lost!'
+
+
+while True:
+    try:
+        print('your choice (rock, paper, scissors, spock or lizard): ')
+        user_choice = input('> ')
+        comp_choice = random.choice(['rock', 'paper', 'scissors', 'spock', 'lizard'])
+        print(winner(user_choice, comp_choice))
+        print(f'computer chose {comp_choice}.')
+        end = input('do you want to play again? (yes or no)')
+        if end[0] == 'n':
+            break
+    except (KeyError, ValueError):
+        print('Invalid input.')
