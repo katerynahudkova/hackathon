@@ -1,0 +1,118 @@
+import random
+import requests
+
+PICTURES = {
+    0: '''
+    
+    
+    
+    
+    ''',
+    1: '''
+|
+|
+|
+|
+|''',
+    2: ''' ___
+|
+|
+|
+|
+|''',
+    3: ''' ___
+|   |
+|
+|
+|
+|''',
+    4: ''' ___
+|   |
+|   0
+|
+|
+|''',
+    5: ''' ___
+|   |
+|   0
+|   |
+|
+|''',
+    6: ''' ___
+|   |
+|   0
+|   |\\
+|
+|''',
+    7: ''' ___
+|   |
+|   0
+|  /|\\
+|
+|''',
+    8: ''' ___
+|   |
+|   0
+|  /|\\
+|  / 
+|''',
+    9: ''' ___
+|   |
+|   0
+|  /|\\
+|  / \\
+|'''
+}
+
+
+def get_list_of_words():
+    response = requests.get(
+        'https://www.mit.edu/~ecprice/wordlist.10000',
+        timeout=10
+    )
+    string_of_words = response.content.decode('utf-8')
+    list_of_words = string_of_words.splitlines()
+    return list_of_words
+
+
+words = get_list_of_words()
+
+
+while True:
+    try:
+        end_game = False
+        lost_guesses = 0
+        random_word = random.choice(words)
+        print('The word was generated.')
+        list = ['_' for i in random_word]
+        print(''.join(list))
+        print('Guess letter: ')
+        while True:
+            guess = input('> ')
+            if guess[0] in random_word:
+                for i in range(len(random_word)):
+                    if guess[0] == random_word[i]:
+                        list[i] = random_word[i]
+                guessed_word = ''.join(list)
+                print(guessed_word)
+                if guessed_word == random_word:
+                    print('you won!')
+                    end = input('do you want to play again? (yes or no)')
+                    if end[0] == 'n':
+                        end_game = True
+                    break
+            else:
+                print(f'There is no {guess[0]} in the word.')
+                lost_guesses += 1
+                print(PICTURES[lost_guesses])
+                if lost_guesses == 9:
+                    print('you lost!')
+                    end = input('do you want to play again? (yes or no)')
+                    if end[0] == 'n':
+                        end_game = True
+                    break
+        if end_game:
+            print('Thanks for playing!')
+            break
+    except ValueError:
+        print('Invalid input.')
